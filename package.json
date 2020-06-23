@@ -60,7 +60,6 @@
     "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
-    "@ncform/ncform-common": "^1.7.0",
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
     "lodash-es": "^4.17.15",

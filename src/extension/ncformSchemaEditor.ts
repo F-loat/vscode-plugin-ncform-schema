@@ -25,6 +25,11 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
 		private readonly context: vscode.ExtensionContext
 	) { }
 
+  private handleUnknowFormat(uri: vscode.Uri) {
+    vscode.window.showInformationMessage('Unknown format, switched to default editor.');
+    vscode.commands.executeCommand('vscode.openWith', uri, 'default');
+  }
+
 	/**
 	 * Called when our custom editor is opened.
 	 */
@@ -33,6 +38,16 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
 		webviewPanel: vscode.WebviewPanel,
 		_token: vscode.CancellationToken
 	): Promise<void> {
+    try {
+      const schema = JSON.parse(document.getText());
+      if (!schema.type || !schema.properties) {
+        this.handleUnknowFormat(document.uri);
+        return;
+      }
+    } catch {
+      this.handleUnknowFormat(document.uri);
+    }
+
     // Setup initial content for the webview
 		webviewPanel.webview.options = {
       enableScripts: true

@@ -1,0 +1,10 @@
+.vscode/**
+.vscode-test/**
+node_modules/**
+out/**/*.map
+src/**
+.gitignore
+.eslintrc.js
+babel.config.js
+yarn.lock
+package-lock.json

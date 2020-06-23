@@ -1,2 +1,3 @@
 # vscode-plugin-ncform-schema
-ncform schema editor plugin for vscode
+
+> ncform schema editor plugin for vscode

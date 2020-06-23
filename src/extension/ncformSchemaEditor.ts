@@ -95,9 +95,12 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
 	/**
 	 * Get the static html used for the editor webviews.
 	 */
-	private getHtmlForWebview(webview: vscode.Webview): string {
-    const extDirname = webview.asWebviewUri(vscode.Uri.file(this.context.extensionPath)).toString();
-    const template = `
+  private getHtmlForWebview(webview: vscode.Webview): string {
+    const baseUri = NcFormSchemaEditorProvider.isDev
+      ? 'http://localhost:8080'
+      : `${webview.asWebviewUri(vscode.Uri.file(this.context.extensionPath))}/out/web`;
+
+    return `
       <!DOCTYPE html>
       <html>
         <head>
@@ -105,8 +108,8 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
           <meta http-equiv=X-UA-Compatible content="IE=edge">
           <meta name=viewport content="width=device-width,initial-scale=1">
           <title>ncform schema editor</title>
-          <link href=vscode://js/app.js rel=preload as=script>
-          <link href=vscode://js/chunk-vendors.js rel=preload as=script>
+          <link href=${baseUri}/js/app.js rel=preload as=script>
+          <link href=${baseUri}/js/chunk-vendors.js rel=preload as=script>
           <style>
             .dev-tip {
               position: fixed;
@@ -116,20 +119,21 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
               background-color: var(--vscode-editor-foreground);
               padding: 4px 8px;
             }
+            .prod-tip {
+              display: none;
+            }
           </style>
         </head>
         <body>
           <div id=app></div>
           ${NcFormSchemaEditorProvider.isDev
-            ? '<div class=dev-tip>DEV</div'
-            : ''
+            ? '<div class=dev-tip>DEV</div>'
+            : '<div class=prod-tip>PRODUCTION</div>'
           }
-          <script src=vscode://js/chunk-vendors.js></script>
-          <script src=vscode://js/app.js></script>
+          <script src=${baseUri}/js/chunk-vendors.js></script>
+          <script src=${baseUri}/js/app.js></script>
         </body>
       </html>`;
-    const baseUri = NcFormSchemaEditorProvider.isDev ? 'http://localhost:8080/' : `${extDirname}/out/web/`;
-    return template.replace(/vscode:\/\//g, baseUri);
   }
 
 	/**

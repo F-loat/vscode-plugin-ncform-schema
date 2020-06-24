@@ -18,6 +18,7 @@
     "type": "git",
     "url": "https://github.com/F-loat/vscode-plugin-ncform-schema.git"
   },
+  "icon": "media/icon.png",
   "main": "./out/extension/index.js",
   "contributes": {
     "commands": [

@@ -1,0 +1,528 @@
+{
+  "title": "JSON schema for ncform",
+  "$schema": "http://json-schema.org/schema",
+  "type": "object",
+  "required": [
+    "type",
+    "properties"
+  ],
+  "definitions": {
+    "rule": {
+      "type": [
+        "object",
+        "boolean",
+        "number",
+        "string"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "string",
+            "boolean",
+            "number"
+          ],
+        "description": "The value passed to the validation rule"
+        },
+        "errMsg": {
+          "type": "string",
+          "description": "Error message"
+        },
+        "options": {
+          "type": "object",
+          "description": "Rule options",
+          "properties": {
+            "delay": {
+              "type": "number",
+              "description": "Delayed verification time (ms)"
+            },
+            "delayMsg": {
+              "type": "string",
+              "description": "Prompt for delayed verification"
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "object",
+      "default": "object",
+      "description": "Root node. object type only"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "integer",
+              "boolean",
+              "object",
+              "array",
+              "HTML",
+              "COMP"
+            ],
+            "description": "Note: The type of uppercase is a special read-only type, and the common use case is to display a separator bar. The data will be auto filtered out when the form is submitted."
+          },
+          "properties": {
+            "$ref": "#/properties/properties"
+          },
+          "items": {
+            "$ref": "#/properties/properties"
+          },
+          "value": {
+            "type": "string",
+            "description": "Value of the field"
+          },
+          "default": {
+            "type": "string",
+            "description": "The default value of the field. Take this one when the \"value\" is empty. "
+          },
+          "valueTemplate": {
+            "type": "string",
+            "description": "Value template. Dynamically calculate the \"value\" based on the supplied dx expression [support dx expression]"
+          },
+          "ui": {
+            "type": "object",
+            "properties": {
+              "widget": {
+                "type": "string",
+                "description": "Widget component name"
+              },
+              "widgetConfig": {
+                "type": "object",
+                "description": "widget component config"
+              },
+              "columns": {
+                "type": [
+                  "number",
+                  "string"
+                ],
+                "description": "Total are 12 columns. [support dx expression]"
+              },
+              "label": {
+                "type": "string",
+                "description": "Label display [support dx expression]"
+              },
+              "showLabel": {
+                "type": "boolean",
+                "description": "Whether to show the label (when it is false, it still takes up space)"
+              },
+              "noLabelSpace": {
+                "type": "boolean",
+                "description": "Whether the label does not occupy space, the priority is higher than showLabel"
+              },
+              "legend": {
+                "type": "string",
+                "description": "Legend content, valid when the type is object or array [support dx expression]"
+              },
+              "showLegend": {
+                "type": "boolean",
+                "description": "Whether to display the legend."
+              },
+              "description": {
+                "type": "string",
+                "description": "Description information [support dx expression]"
+              },
+              "placeholder": {
+                "type": "string",
+                "description": "Placeholder content [support dx expression]"
+              },
+              "disabled": {
+                "type": [
+                  "boolean",
+                  "string"
+                ],
+                "description": "Whether to disable [support dx expression]"
+              },
+              "readonly": {
+                "type": [
+                  "boolean",
+                  "string"
+                ],
+                "description": "Whether read-only [support dx expression]"
+              },
+              "hidden": {
+                "type": [
+                  "boolean",
+                  "string"
+                ],
+                "description": "Whether to hide [support dx expression]"
+              },
+              "help": {
+                "type": "object",
+                "description": "Help information",
+                "properties": {
+                  "show": {
+                    "type": "boolean",
+                    "description": "Whether to display, default is false"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Help detail information"
+                  },
+                  "iconCls": {
+                    "type": "string",
+                    "description": "Help icon class name"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Help text"
+                  }
+                }
+              },
+              "itemClass": {
+                "type": "string",
+                "description": "The form item class name"
+              },
+              "preview": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "video",
+                      "audio",
+                      "image",
+                      "link"
+                    ],
+                    "description": "Preview type"
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "Default: 'dx: {{$self}}' [supports dx expressions]"
+                  },
+                  "clearable": {
+                    "type": "boolean",
+                    "description": "Whether to display the clear button"
+                  },
+                  "outward": {
+                    "type": "object",
+                    "description": "outward appearance. Valid only if type=image",
+                    "properties": {
+                      "width": {
+                        "type": "number",
+                        "description": "Width, 0 means unlimited"
+                      },
+                      "height": {
+                        "type": "number",
+                        "description": "Height, 0 means unlimited"
+                      },
+                      "shape": {
+                        "type": "string",
+                        "enum": [
+                          "",
+                          "rounded",
+                          "circle"
+                        ],
+                        "description": "Appearance shape."
+                      }
+                    }
+                  }
+                }
+              },
+              "linkFields": {
+                "type": "array",
+                "description": "Associated fields. when the value changes, it will trigger some actions of the associated field, such as rules check",
+                "items": {
+                  "type": "object",
+                  "required": ["rules"],
+                  "properties": {
+                    "fieldPath": {
+                      "type": "string",
+                      "description": "The associated item field path. such as 'user.name'，'user[i].name'"
+                    },
+                    "rules": {
+                      "type": "array",
+                      "description": "The rules, such as ['required']",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "rules": {
+            "type": "object",
+            "description": "Verification rules",
+            "properties": {
+              "required": {
+                "$ref": "#/definitions/rule"
+              },
+              "number": {
+                "$ref": "#/definitions/rule"
+              },
+              "ajax": {
+                "type": "object",
+                "properties": {
+                  "remoteUrl": {
+                    "type": "string"
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "get",
+                      "post"
+                    ],
+                    "paramName": {
+                      "type": "string"
+                    },
+                    "otherParams": {
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              "customRule": {
+                "type": "array",
+                "description": "Custom Validation Rules",
+                "items": {
+                  "script": {
+                    "type": "string",
+                    "description": "[Support dx expression]"
+                  },
+                  "errMsg": {
+                    "type": "string",
+                    "description": "Error message"
+                  },
+                  "linkItems": {
+                    "type": "array",
+                    "description": "When the check is triggered, the customRule rule validation of these associated items is also triggered (recommended using ui.linkFields instead)",
+                    "items": {
+                      "fieldPath": {
+                        "type": "string",
+                        "description": "The associated item field path. such as 'user.name'，'user[i].name'"
+                      },
+                      "customRuleIdx": {
+                        "type": "number",
+                        "description": "The index of the customRule of the link item"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "additionalProperties": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "number",
+                    "integer"
+                  ]
+                }
+              }
+            }
+          },
+          "then": {
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "rules": {
+                  "type": "object",
+                  "properties": {
+                    "minimum": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "maximum": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "multipleOf": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "exclusiveMaximum": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "exclusiveMinimum": {
+                      "$ref": "#/definitions/rule"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "additionalProperties": {
+              "properties": {
+                "type": {
+                  "const": "string"
+                }
+              }
+            }
+          },
+          "then": {
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "rules": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "tel": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "ipv4": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "ipv6": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "email": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "pattern": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "hostname": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "dateTime": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "maxLength": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "minLength": {
+                      "$ref": "#/definitions/rule"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "additionalProperties": {
+              "properties": {
+                "type": {
+                  "const": "array"
+                }
+              }
+            }
+          },
+          "then": {
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "rules": {
+                  "type": "object",
+                  "properties": {
+                    "contains": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "maxItems": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "minItems": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "uniqueItems": {
+                      "$ref": "#/definitions/rule"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "additionalProperties": {
+              "properties": {
+                "type": {
+                  "const": "object"
+                }
+              }
+            }
+          },
+          "then": {
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "rules": {
+                  "type": "object",
+                  "properties": {
+                    "maxProperties": {
+                      "$ref": "#/definitions/rule"
+                    },
+                    "minProperties": {
+                      "$ref": "#/definitions/rule"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "globalConfig": {
+      "type": "object",
+      "description": "Global configuration",
+      "properties": {
+        "ignoreRulesWhenHidden": {
+          "type": "boolean",
+          "description": "When the controls are hidden, its validation rules are automatically ignored. Default is true"
+        },
+        "style": {
+          "type": "object",
+          "description": "Global style configuration",
+          "properties": {
+            "formCls": {
+              "type": "string",
+              "description": "Form class"
+            },
+            "invalidFeedbackCls": {
+              "type": "string",
+              "description": "Invalid feedback class "
+            }
+          }
+        },
+        "constants": {
+          "type": "object",
+          "description": "Global constant configuration, can be accessed by {{$const.userName}}"
+        },
+        "scrollToFailField": {
+          "type": "object",
+          "description": "Automatically scroll to fields that failed validation",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable this feature or not"
+            },
+            "container": {
+              "type": "string",
+              "description": "The container that has to be scrolled."
+            },
+            "duration": {
+              "type": "number",
+              "description": "The duration (in milliseconds) of the scrolling animation"
+            },
+            "offset": {
+              "type": "number",
+              "description": "The offset that should be applied when scrolling. "
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -8,17 +8,17 @@
     <div
       v-for="(item, index) of properties"
       :key="item.key"
-      :class="['col-' + (item.ui.columns || 12)]"
+      :class="['col-' + (item.ui ? (item.ui.columns || 12) : 12)]"
     >
       <div
         class="inner-wrap"
         :class="{
-          hidden: item.ui.hidden === true,
-          readonly: item.ui.readonly === true
+          hidden: item.ui && item.ui.hidden === true,
+          readonly: item.ui && item.ui.readonly === true
         }"
       >
         <div class="inner-item" @click="handleCheck(item, `${paths}[${index}]`)">
-          <span class="inner-item-label">{{ item.ui.label }}</span> <!-- label -->
+          <span class="inner-item-label">{{ item.ui && item.ui.label }}</span> <!-- label -->
           <span class="inner-item-key">{{item.key}}</span>
         </div>
         <nested-draggable

@@ -6,9 +6,7 @@ export const form2drag = (properties) => {
       const curVal = properties[curKey];
       const result = { ...curVal, key: curKey };
 
-      if (curVal.ui && curVal.ui.widgetConfig && curVal.ui.widgetConfig.properties) {
-        result.ui.widgetConfig.properties = form2drag(curVal.ui.widgetConfig.properties);
-      } else if (curVal.type === 'array' && curVal.items) {
+      if (curVal.type === 'array' && curVal.items) {
         const { items } = curVal;
 
         if (items.type === 'object') {
@@ -39,9 +37,7 @@ export const drag2form = (properties) => {
         checked: undefined
       };
 
-      if (curVal.ui && curVal.ui.widgetConfig && curVal.ui.widgetConfig.properties) {
-        nextRst[curKey].ui.widgetConfig.properties = drag2form(curVal.ui.widgetConfig.properties);
-      } else if (curVal.type === 'array' && curVal.items) {
+      if (curVal.type === 'array' && curVal.items) {
         const { items } = curVal;
 
         if (items.type === 'object') {

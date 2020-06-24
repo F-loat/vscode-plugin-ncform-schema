@@ -77,11 +77,9 @@
             "$ref": "#/properties/properties"
           },
           "value": {
-            "type": "string",
             "description": "Value of the field"
           },
           "default": {
-            "type": "string",
             "description": "The default value of the field. Take this one when the \"value\" is empty. "
           },
           "valueTemplate": {

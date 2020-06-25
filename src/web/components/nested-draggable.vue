@@ -17,13 +17,18 @@
           readonly: item.ui && item.ui.readonly === true
         }"
       >
-        <div class="inner-item" @click="handleCheck(item, `${paths}[${index}]`)">
+        <div
+          class="inner-item"
+          @click="handleCheck(item, `${paths}[${index}]`)"
+          @contextmenu.prevent="handleMenu($event, item, `${paths}[${index}]`)"
+        >
           <span class="inner-item-label">{{ item.ui && item.ui.label }}</span> <!-- label -->
           <span class="inner-item-key">{{item.key}}</span>
         </div>
         <nested-draggable
           @check="handleCheck"
           @dragend="handleDrag"
+          @contextmenu="handleMenu"
           v-if="item.type === 'object'"
           :properties="item.properties"
           :paths="`${paths}[${index}].properties`"
@@ -32,6 +37,7 @@
           <nested-draggable
             @check="handleCheck"
             @dragend="handleDrag"
+            @contextmenu="handleMenu"
             v-if="item.items.type === 'array' && item.items.items"
             :properties="item.items.items"
             :paths="`${paths}[${index}].items.items`"
@@ -39,6 +45,7 @@
           <nested-draggable
             @check="handleCheck"
             @dragend="handleDrag"
+            @contextmenu="handleMenu"
             v-else-if="item.items.type === 'object' && item.items.properties"
             :properties="item.items.properties"
             :paths="`${paths}[${index}].items.properties`"
@@ -72,6 +79,9 @@ export default {
     },
     handleDrag(e) {
       this.$emit('end', e);
+    },
+    handleMenu(e, item, paths) {
+      this.$emit('contextmenu', e, item, paths)
     }
   }
 };

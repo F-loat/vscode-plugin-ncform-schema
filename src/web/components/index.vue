@@ -8,6 +8,16 @@
       paths="properties"
       @check="handleCheck"
       @end="handleUpdate(dragSchema)"
+      @contextmenu="handleMenu"
+    />
+    <context-menu
+      v-show="menu.show"
+      :top="menu.top"
+      :left="menu.left"
+      :item="menu.item"
+      :paths="menu.paths"
+      :schema="dragSchema"
+      @update="handleUpdate"
     />
     <el-drawer
       :visible.sync="drawer"
@@ -30,11 +40,13 @@ import _get from 'lodash-es/get';
 import _set from 'lodash-es/set';
 import _cloneDeep from 'lodash-es/cloneDeep';
 import { form2drag, drag2form } from '../utils';
+import contextMenu from './context-menu';
 import nestedDraggable from './nested-draggable.vue';
 
 export default {
   name: 'App',
   components: {
+    contextMenu,
     nestedDraggable
   },
   data() {
@@ -42,7 +54,8 @@ export default {
       drawer: false,
       copiedItem: {},
       checkedItem: {},
-      dragSchema: {}
+      dragSchema: {},
+      menu: {}
     };
   },
   computed: {
@@ -73,17 +86,17 @@ export default {
       };
       this.checkedPaths = paths;
     },
-    handleAdd(paths, index, item) {
-      _get(this.dragSchema, paths).splice(index, 0, item || {});
-    },
-    handleCopy(item) {
-      this.copiedItem = { ...item, key: Date.now() };
-    },
-    handlePaste(paths, index) {
-      this.handleAdd(paths, index, this.copiedItem);
-    },
-    handleRemove(paths, index) {
-      _get(this.dragSchema, paths).splice(index, 1);
+    handleMenu(e, item, paths) {
+      this.menu = {
+        top: e.pageY,
+        left: e.pageX,
+        show: true,
+        item,
+        paths
+      }
+      window.addEventListener('click', () => {
+        this.menu = { show: false }
+      }, { once: true })
     },
     handleInput(e) {
       try {

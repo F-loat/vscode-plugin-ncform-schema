@@ -2,7 +2,7 @@
   "name": "vscode-plugin-ncform-schema",
   "displayName": "NcForm Schema Editor",
   "description": "ncform schema editor plugin for vscode",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "F-loat",
   "engines": {
     "vscode": "^1.46.0"

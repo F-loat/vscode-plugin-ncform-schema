@@ -59,7 +59,7 @@
           "schema/*.json",
           "schemas/*.json"
         ],
-        "url": "https://raw.githubusercontent.com/F-loat/vscode-plugin-ncform-schema/master/src/validation/schema.json"
+        "url": "./src/validation/schema.json"
       }
     ]
   },

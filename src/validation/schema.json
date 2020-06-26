@@ -74,7 +74,7 @@
             "$ref": "#/properties/properties"
           },
           "items": {
-            "$ref": "#/properties/properties"
+            "$ref": "#/properties/properties/additionalProperties"
           },
           "value": {
             "description": "Value of the field"

@@ -2,15 +2,16 @@
   <ncformDrag />
 </template>
 
-<script>
-import ncformDrag from './components/index';
+<script lang="ts">
+import Vue from 'vue';
+import ncformDrag from './components/index.vue';
 
-export default {
+export default Vue.extend({
   name: 'App',
   components: {
-    ncformDrag
-  }
-};
+    ncformDrag,
+  },
+});
 </script>
 
 <style lang="scss">

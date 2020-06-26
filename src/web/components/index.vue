@@ -14,54 +14,55 @@
       v-show="menu.show"
       :top="menu.top"
       :left="menu.left"
-      :item="menu.item"
       :paths="menu.paths"
       :schema="dragSchema"
       @update="handleUpdate"
     />
     <el-drawer
-      :visible.sync="drawer"
+      :visible.sync="drawer.show"
       :show-close="false"
       :with-header="false"
       modal
       append-to-body
     >
       <textarea
-        v-if="drawer"
-        :value="drawerValue"
-        @input="handleInput"
+        v-if="drawer.show"
+        v-model="drawer.value"
       />
     </el-drawer>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import _get from 'lodash-es/get';
 import _set from 'lodash-es/set';
 import _cloneDeep from 'lodash-es/cloneDeep';
-import { form2drag, drag2form } from '../utils';
-import contextMenu from './context-menu';
+import contextMenu from './context-menu.vue';
 import nestedDraggable from './nested-draggable.vue';
+import { form2drag, drag2form } from '../utils';
 
-export default {
+export default Vue.extend({
   name: 'App',
   components: {
     contextMenu,
-    nestedDraggable
+    nestedDraggable,
   },
   data() {
     return {
-      drawer: false,
-      copiedItem: {},
-      checkedItem: {},
+      menu: {
+        show: false,
+        top: 0,
+        left: 0,
+        paths: '',
+      },
+      drawer: {
+        show: false,
+        value: '',
+        paths: '',
+      },
       dragSchema: {},
-      menu: {}
     };
-  },
-  computed: {
-    drawerValue() {
-      return JSON.stringify(this.checkedItem, null, 2);
-    }
   },
   mounted() {
     this.initSyncSchmea();
@@ -69,56 +70,61 @@ export default {
   methods: {
     initSyncSchmea() {
       this.$vsemit('init');
-      this.$vson('update', (data) => {
+      this.$vson('update', (data: string) => {
         const formSchema = JSON.parse(data);
         this.dragSchema = {
           ...formSchema,
-          properties: form2drag(formSchema.properties)
+          properties: form2drag(formSchema.properties),
         };
       });
     },
-    handleCheck(item, paths) {
-      this.drawer = true;
-      this.checkedItem = {
+    handleCheck(paths: string) {
+      const { dragSchema } = this;
+      const item = _get(dragSchema, paths);
+      const value = JSON.stringify({
         ...item,
         items: undefined,
-        properties: undefined
-      };
-      this.checkedPaths = paths;
+        properties: undefined,
+      }, null, 2);
+      this.drawer = { show: true, value, paths };
     },
-    handleMenu(e, item, paths) {
+    handleMenu(e: MouseEvent, paths: string) {
       this.menu = {
         top: e.pageY,
         left: e.pageX,
         show: true,
-        item,
-        paths
-      }
+        paths,
+      };
       window.addEventListener('click', () => {
-        this.menu = { show: false }
-      }, { once: true })
+        this.menu.show = false;
+      }, { once: true });
     },
-    handleInput(e) {
+    handleUpdate(dragSchema: any) {
+      this.$vsemit('update', JSON.stringify({
+        ...dragSchema,
+        properties: drag2form(dragSchema.properties),
+      }, null, 2));
+    },
+  },
+  watch: {
+    'drawer.value': function handler(value) {
       try {
-        const { dragSchema, checkedPaths } = this;
-        const oldItem = _get(dragSchema, checkedPaths);
-        const newItem = JSON.parse(e.target.value);
+        const { dragSchema, drawer } = this;
+        const { items, properties } = _get(dragSchema, drawer.paths);
+        const newItem = JSON.parse(value);
         const newSchema = _cloneDeep(dragSchema);
-        this.checkedItem = newItem;
-        _set(newSchema, checkedPaths, { ...oldItem, ...newItem });
+        _set(newSchema, drawer.paths, {
+          ...newItem,
+          items,
+          properties,
+        });
         this.handleUpdate(newSchema);
       } catch {
         // do-nothing
       }
     },
-    handleUpdate(dragSchema) {
-      this.$vsemit('update', JSON.stringify({
-        ...dragSchema,
-        properties: drag2form(dragSchema.properties)
-      }, null, 2));
-    }
-  }
-};
+  },
+});
 </script>
 
 <style lang="scss">

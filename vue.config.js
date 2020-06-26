@@ -4,6 +4,7 @@ module.exports = {
   publicPath: isDev ? 'http://localhost:8080/' : 'vscode://',
   outputDir: 'out/web',
   filenameHashing: false,
+  productionSourceMap: false,
   css: {
     extract: false
   },

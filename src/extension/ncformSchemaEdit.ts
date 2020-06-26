@@ -1,8 +1,7 @@
 import * as vscode from 'vscode';
 
 export class NcFormSchemaEditProvider {
-
-  public static register(context: vscode.ExtensionContext): vscode.Disposable {
+  public static register(): vscode.Disposable {
     return vscode.commands.registerCommand(NcFormSchemaEditProvider.viewType, (uri: vscode.Uri) => {
       let resource = uri;
       if (!(resource instanceof vscode.Uri)) {
@@ -18,5 +17,4 @@ export class NcFormSchemaEditProvider {
   }
 
   private static readonly viewType = 'ncformSchema.edit';
-
 }

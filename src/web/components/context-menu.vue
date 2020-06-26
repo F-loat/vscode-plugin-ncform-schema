@@ -25,43 +25,45 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import _get from 'lodash-es/get';
-import _set from 'lodash-es/set';
 import _cloneDeep from 'lodash-es/cloneDeep';
 
-export default {
+export default Vue.extend({
   props: {
     top: {
       type: Number,
-      default: 0
+      default: 0,
     },
     left: {
       type: Number,
-      default: 0
+      default: 0,
     },
     schema: {
-      type: Object
-    },
-    item: {
-      type: Object
+      type: Object,
     },
     paths: {
-      type: String
-    }
+      type: String,
+    },
   },
   data() {
     return {
-      copiedItem: {}
-    }
+      copiedItem: {
+        key: '',
+      },
+    };
   },
   methods: {
     getPaths() {
       return this.paths.match(/(.*)\[(\d+)\]$/);
     },
-    handleAdd(item) {
+    handleAdd(item: any) {
       const paths = this.getPaths();
       const newSchema = _cloneDeep(this.schema);
+      const checkedItem = _get(this.schema, this.paths);
+
+      if (!paths) return;
 
       _get(newSchema, paths[1]).splice(paths[2], 0, item || {
         key: Date.now(),
@@ -69,31 +71,33 @@ export default {
         ui: {
           widget: 'input',
           widgetConfig: {},
-          columns: this.item.ui.columns,
-          label: '新增字段'
+          columns: checkedItem.ui.columns,
+          label: '新增字段',
         },
-        rules: {}
+        rules: {},
       });
 
       this.$emit('update', newSchema);
     },
     handleCopy() {
-      this.copiedItem = _cloneDeep(this.item);
+      const checkedItem = _get(this.schema, this.paths);
+      this.copiedItem = _cloneDeep(checkedItem);
     },
     handlePaste() {
       this.handleAdd({
         ...this.copiedItem,
-        key: `${this.copiedItem.key}-${Date.now()}`
+        key: `${this.copiedItem.key}-${Date.now()}`,
       });
     },
     handleRemove() {
       const paths = this.getPaths();
+      if (!paths) return;
       const newSchema = _cloneDeep(this.schema);
       _get(newSchema, paths[1]).splice(paths[2], 1);
       this.$emit('update', newSchema);
-    }
-  }
-}
+    },
+  },
+});
 </script>
 
 <style>

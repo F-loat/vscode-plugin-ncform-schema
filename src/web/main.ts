@@ -10,5 +10,5 @@ Vue.use(VSCodePlugin);
 Vue.component(Drawer.name, Drawer);
 
 new Vue({
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount('#app');

@@ -1,5 +1,5 @@
 export default {
-  install (Vue) {
+  install(Vue) {
     const vscode = acquireVsCodeApi();
 
     Vue.prototype.$vscode = vscode;
@@ -7,12 +7,12 @@ export default {
     Vue.prototype.$vsemit = (type, body) => {
       vscode.postMessage({
         type,
-        body
+        body,
       });
     };
 
     Vue.prototype.$vson = (type, callback) => {
-      window.addEventListener('message', event => {
+      window.addEventListener('message', (event) => {
         const message = event.data;
 
         if (message.type === type) {
@@ -20,6 +20,5 @@ export default {
         }
       });
     };
-  }
+  },
 };
-

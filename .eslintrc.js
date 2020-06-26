@@ -1,25 +1,28 @@
-/**@type {import('eslint').Linter.Config} */
-// eslint-disable-next-line no-undef
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
-	root: true,
-	parser: '@typescript-eslint/parser',
-	plugins: [
-		'@typescript-eslint',
-	],
-	extends: [
-		'eslint:recommended',
-		'plugin:@typescript-eslint/recommended',
-	],
-	rules: {
-		'semi': [2, 'always'],
-		'@typescript-eslint/no-unused-vars': 0,
-		'@typescript-eslint/no-explicit-any': 0,
-		'@typescript-eslint/explicit-module-boundary-types': 0,
-		'@typescript-eslint/no-non-null-assertion': 0
+  root: true,
+  env: {
+    node: true,
+  },
+  extends: [
+    'plugin:vue/essential',
+    '@vue/airbnb',
+    '@vue/typescript/recommended',
+  ],
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'import/no-unresolved': 'off',
+    'import/prefer-default-export': 'off',
+    'no-useless-constructor': 'off',
+    'no-param-reassign': 'off',
+    'class-methods-use-this': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   globals: {
-    window: true,
-    process: true,
-    acquireVsCodeApi: true
-  }
+    acquireVsCodeApi: true,
+  },
 };

@@ -64,12 +64,12 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile && npm run build",
-    "serve": "vue-cli-service serve src/web/main.js",
-    "build": "vue-cli-service build src/web/main.js",
+    "vscode:prepublish": "npm run lint && npm run compile && npm run build",
+    "serve": "vue-cli-service serve src/web/main.ts",
+    "build": "vue-cli-service build src/web/main.ts",
     "compile": "tsc -p ./src/extension",
     "watch": "tsc -w -p ./src/extension",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint ./src --fix"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -79,14 +79,21 @@
     "vuedraggable": "^2.23.2"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.3",
     "@types/node": "^12.12.0",
     "@types/vscode": "^1.46.0",
-    "@typescript-eslint/eslint-plugin": "^3.0.2",
-    "@typescript-eslint/parser": "^3.0.2",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.4.0",
+    "@vue/cli-plugin-eslint": "^4.4.6",
+    "@vue/cli-plugin-typescript": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "@vue/eslint-config-typescript": "^5.0.2",
     "babel-plugin-component": "^1.1.1",
     "eslint": "^7.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "typescript": "^3.9.4",

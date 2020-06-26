@@ -19,8 +19,8 @@
       >
         <div
           class="inner-item"
-          @click="handleCheck(item, `${paths}[${index}]`)"
-          @contextmenu.prevent="handleMenu($event, item, `${paths}[${index}]`)"
+          @click="handleCheck(`${paths}[${index}]`)"
+          @contextmenu.prevent="handleMenu($event, `${paths}[${index}]`)"
         >
           <span class="inner-item-label">{{ item.ui && item.ui.label }}</span> <!-- label -->
           <span class="inner-item-key">{{item.key}}</span>
@@ -56,35 +56,36 @@
   </draggable>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import draggable from 'vuedraggable';
 
-export default {
+export default Vue.extend({
   name: 'nestedDraggable',
   components: {
-    draggable
+    draggable,
   },
   props: {
     paths: {
       type: String,
-      default: ''
+      default: '',
     },
     properties: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   methods: {
-    handleCheck(item, paths) {
-      this.$emit('check', item, paths);
+    handleCheck(paths: string) {
+      this.$emit('check', paths);
     },
-    handleDrag(e) {
+    handleDrag(e: MouseEvent) {
       this.$emit('end', e);
     },
-    handleMenu(e, item, paths) {
-      this.$emit('contextmenu', e, item, paths)
-    }
-  }
-};
+    handleMenu(e: MouseEvent, paths: string) {
+      this.$emit('contextmenu', e, paths);
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>

@@ -14,7 +14,11 @@
 
 * 可视化编辑
 
+![overview](screenshot/overview.png)
+
 * 代码智能提示
+
+![validation](screenshot/validation.png)
 
 ## 使用
 
@@ -60,7 +64,3 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
   // ...
 }
 ```
-
-## 截图
-
-![overview](screenshot/overview.png)

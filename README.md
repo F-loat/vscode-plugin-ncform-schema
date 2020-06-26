@@ -2,9 +2,9 @@
 
 > ncform schema editor plugin for vscode
 
-[![Current Version](http://vsmarketplacebadge.apphb.com/version-short/F-loat.vscode-plugin-ncform-schema.svg)](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-plugin-ncform-schema)
-[![Install Count](http://vsmarketplacebadge.apphb.com/installs-short/F-loat.vscode-plugin-ncform-schema.svg)](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-plugin-ncform-schema)
-[![Rating](http://vsmarketplacebadge.apphb.com/rating-short/F-loat.vscode-plugin-ncform-schema.svg)](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-plugin-ncform-schema)
+[![Current Version](https://vsmarketplacebadge.apphb.com/version-short/F-loat.vscode-plugin-ncform-schema.svg)](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-plugin-ncform-schema)
+[![Install Count](https://vsmarketplacebadge.apphb.com/installs-short/F-loat.vscode-plugin-ncform-schema.svg)](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-plugin-ncform-schema)
+[![Rating](https://vsmarketplacebadge.apphb.com/rating-short/F-loat.vscode-plugin-ncform-schema.svg)](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-plugin-ncform-schema)
 
 ## 安装
 
@@ -30,6 +30,37 @@
 }
 ```
 
+## 开发
+
+* 克隆项目
+
+``` sh
+git clone https://github.com/F-loat/vscode-plugin-ncform-schema.git
+```
+
+* 安装依赖
+
+``` sh
+npm install
+```
+
+* 调试插件
+
+使用 VSCode 打开项目，执行 `yarn build`，然后按下 F5 开始调试
+
+* 调试页面
+
+开启页面调试配置，并执行 `yarn serve`
+
+``` ts
+// src\extension\ncformSchemaEditor.ts
+export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvider {
+  // ...
+  private static readonly isDev = true;
+  // ...
+}
+```
+
 ## 截图
 
-![screenshot](screenshot/overview.png)
+![overview](screenshot/overview.png)

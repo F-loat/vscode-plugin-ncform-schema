@@ -118,7 +118,7 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
         </head>
         <body>
           <div id=app></div>
-          ${NcFormSchemaEditorProvider.isDev && '<div class=dev-tip>DEV</div>'}
+          ${NcFormSchemaEditorProvider.isDev ? '<div class=dev-tip>DEV</div>' : ''}
           <script src=${baseUri}/js/chunk-vendors.js></script>
           <script src=${baseUri}/js/app.js></script>
         </body>

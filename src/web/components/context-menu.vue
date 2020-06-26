@@ -9,7 +9,11 @@
     <div class="menu-item" @click="handleAdd()">
       插入
     </div>
-    <div class="menu-item" @click="handleCopy">
+    <div
+      class="menu-item"
+      @click="handleCopy"
+      v-if="paths[2]"
+    >
       复制
     </div>
     <div
@@ -19,7 +23,11 @@
     >
       粘贴
     </div>
-    <div class="menu-item" @click="handleRemove">
+    <div
+      class="menu-item"
+      @click="handleRemove"
+      v-if="paths[2]"
+    >
       删除
     </div>
   </div>
@@ -44,7 +52,10 @@ export default Vue.extend({
       type: Object,
     },
     paths: {
-      type: String,
+      type: Array as () => string[],
+      default() {
+        return [''];
+      },
     },
   },
   data() {
@@ -55,29 +66,29 @@ export default Vue.extend({
     };
   },
   methods: {
-    getPaths() {
-      return this.paths.match(/(.*)\[(\d+)\]$/);
-    },
     handleAdd(item: any) {
-      const paths = this.getPaths();
-      const newSchema = _cloneDeep(this.schema);
-      const checkedItem = _get(this.schema, this.paths);
+      const schema = _cloneDeep(this.schema);
+      const checkedItem = _get(schema, this.paths[0]);
 
-      if (!paths) return;
-
-      _get(newSchema, paths[1]).splice(paths[2], 0, item || {
+      const addItem = item || {
         key: Date.now(),
         type: 'string',
         ui: {
           widget: 'input',
           widgetConfig: {},
-          columns: checkedItem.ui.columns,
+          columns: checkedItem.ui ? checkedItem.ui.columns : 12,
           label: '新增字段',
         },
         rules: {},
-      });
+      };
 
-      this.$emit('update', newSchema);
+      if (this.paths[2]) {
+        _get(schema, this.paths[1]).splice(this.paths[2], 0, addItem);
+      } else {
+        checkedItem.push(addItem);
+      }
+
+      this.$emit('update', schema);
     },
     handleCopy() {
       const checkedItem = _get(this.schema, this.paths);
@@ -90,11 +101,9 @@ export default Vue.extend({
       });
     },
     handleRemove() {
-      const paths = this.getPaths();
-      if (!paths) return;
-      const newSchema = _cloneDeep(this.schema);
-      _get(newSchema, paths[1]).splice(paths[2], 1);
-      this.$emit('update', newSchema);
+      const schema = _cloneDeep(this.schema);
+      _get(schema, this.paths[1]).splice(this.paths[2], 1);
+      this.$emit('update', schema);
     },
   },
 });

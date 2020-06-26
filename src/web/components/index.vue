@@ -54,7 +54,7 @@ export default Vue.extend({
         show: false,
         top: 0,
         left: 0,
-        paths: '',
+        paths: [''],
       },
       drawer: {
         show: false,
@@ -79,8 +79,8 @@ export default Vue.extend({
       });
     },
     handleCheck(paths: string) {
-      const { dragSchema } = this;
-      const item = _get(dragSchema, paths);
+      const schema = _cloneDeep(this.dragSchema);
+      const item = _get(schema, paths);
       const value = JSON.stringify({
         ...item,
         items: undefined,
@@ -93,7 +93,7 @@ export default Vue.extend({
         top: e.pageY,
         left: e.pageX,
         show: true,
-        paths,
+        paths: paths.match(/(.*)\[(\d+)\]?$/) || [paths],
       };
       window.addEventListener('click', () => {
         this.menu.show = false;
@@ -109,16 +109,16 @@ export default Vue.extend({
   watch: {
     'drawer.value': function handler(value) {
       try {
+        const item = JSON.parse(value);
         const { dragSchema, drawer } = this;
         const { items, properties } = _get(dragSchema, drawer.paths);
-        const newItem = JSON.parse(value);
-        const newSchema = _cloneDeep(dragSchema);
-        _set(newSchema, drawer.paths, {
-          ...newItem,
+        const schema = _cloneDeep(dragSchema);
+        _set(schema, drawer.paths, {
+          ...item,
           items,
           properties,
         });
-        this.handleUpdate(newSchema);
+        this.handleUpdate(schema);
       } catch {
         // do-nothing
       }

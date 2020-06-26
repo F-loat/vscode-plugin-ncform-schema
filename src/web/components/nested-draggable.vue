@@ -4,6 +4,7 @@
     group="nested-draggable"
     :list="properties"
     @end="handleDrag"
+    @contextmenu.native.prevent="!properties.length && handleMenu($event, paths)"
   >
     <div
       v-for="(item, index) of properties"
@@ -26,31 +27,13 @@
           <span class="inner-item-key">{{item.key}}</span>
         </div>
         <nested-draggable
+          v-if="item.type === 'object' || item.type === 'array'"
+          :paths="getPaths(item, index)"
+          :properties="getProperties(item)"
           @check="handleCheck"
           @dragend="handleDrag"
           @contextmenu="handleMenu"
-          v-if="item.type === 'object'"
-          :properties="item.properties"
-          :paths="`${paths}[${index}].properties`"
         />
-        <template v-else-if="item.type === 'array' && item.items">
-          <nested-draggable
-            @check="handleCheck"
-            @dragend="handleDrag"
-            @contextmenu="handleMenu"
-            v-if="item.items.type === 'array' && item.items.items"
-            :properties="item.items.items"
-            :paths="`${paths}[${index}].items.items`"
-          />
-          <nested-draggable
-            @check="handleCheck"
-            @dragend="handleDrag"
-            @contextmenu="handleMenu"
-            v-else-if="item.items.type === 'object' && item.items.properties"
-            :properties="item.items.properties"
-            :paths="`${paths}[${index}].items.properties`"
-          />
-        </template>
       </div>
     </div>
   </draggable>
@@ -75,6 +58,31 @@ export default Vue.extend({
     },
   },
   methods: {
+    getPaths(item: any, index: number) {
+      const { paths } = this;
+      if (item.type === 'object') {
+        return `${paths}[${index}].properties`;
+      }
+      if (item.items.type === 'array' && item.items.items) {
+        return `${paths}[${index}].items.items`;
+      }
+      if (item.items.type === 'object' && item.items.properties) {
+        return `${paths}[${index}].items.properties`;
+      }
+      return '';
+    },
+    getProperties(item: any) {
+      if (item.type === 'object') {
+        return item.properties;
+      }
+      if (item.items.type === 'array' && item.items.items) {
+        return item.items.items;
+      }
+      if (item.items.type === 'object' && item.items.properties) {
+        return item.items.properties;
+      }
+      return [];
+    },
     handleCheck(paths: string) {
       this.$emit('check', paths);
     },

@@ -126,9 +126,9 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
   }
 
   /**
-   * Write out the json to a given document.
+   * Write out the json string to a given document.
    */
-  private updateTextDocument(document: vscode.TextDocument, json: any) {
+  private updateTextDocument(document: vscode.TextDocument, jsonStr: string) {
     const edit = new vscode.WorkspaceEdit();
 
     // Just replace the entire document every time for this example extension.
@@ -136,7 +136,7 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
     edit.replace(
       document.uri,
       new vscode.Range(0, 0, document.lineCount, 0),
-      json,
+      `${jsonStr}\n`,
     );
 
     return vscode.workspace.applyEdit(edit);

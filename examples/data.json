@@ -1,0 +1,17 @@
+{
+  "age": 18,
+  "name": {
+    "firstName": "daniel",
+    "lastName": "xiao"
+  },
+  "addresses": [
+    {
+      "provinceId": 1,
+      "cityId": 2
+    }
+  ],
+  "tags": [
+    "man",
+    "it"
+  ]
+}

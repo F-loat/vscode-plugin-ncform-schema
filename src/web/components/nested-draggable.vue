@@ -27,7 +27,7 @@
           <span class="inner-item-key">{{item.key}}</span>
         </div>
         <nested-draggable
-          v-if="item.type === 'object' || item.type === 'array'"
+          v-if="getVisible(item)"
           :paths="getPaths(item, index)"
           :properties="getProperties(item)"
           @check="handleCheck"
@@ -58,11 +58,22 @@ export default Vue.extend({
     },
   },
   methods: {
+    getVisible(item: any) {
+      if (item.type === 'object') {
+        return true;
+      }
+      if (!item.items) return false;
+      if (item.items.type === 'object' || item.items.type === 'array') {
+        return true;
+      }
+      return false;
+    },
     getPaths(item: any, index: number) {
       const { paths } = this;
       if (item.type === 'object') {
         return `${paths}[${index}].properties`;
       }
+      if (!item.items) return '';
       if (item.items.type === 'array' && item.items.items) {
         return `${paths}[${index}].items.items`;
       }
@@ -75,6 +86,7 @@ export default Vue.extend({
       if (item.type === 'object') {
         return item.properties;
       }
+      if (!item.items) return [];
       if (item.items.type === 'array' && item.items.items) {
         return item.items.items;
       }

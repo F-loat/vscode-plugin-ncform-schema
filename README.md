@@ -20,6 +20,10 @@
 
 ![validation](screenshot/validation.png)
 
+* Schema Generator
+
+![generate](screenshot/generate.png)
+
 ## 使用
 
 * 点击 `JSON` 文件右上角工具栏图标切换编辑模式
@@ -57,7 +61,7 @@ npm install
 开启页面调试配置，并执行 `yarn serve`
 
 ``` ts
-// src\extension\ncformSchemaEditor.ts
+// src/extension/ncformSchemaEditor.ts
 export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvider {
   // ...
   private static readonly isDev = true;

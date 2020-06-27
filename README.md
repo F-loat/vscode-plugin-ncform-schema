@@ -1,6 +1,6 @@
 # vscode-plugin-ncform-schema
 
-> ncform schema editor plugin for vscode
+> [ncform](https://github.com/ncform/ncform) schema editor plugin for vscode
 
 [![Current Version](https://vsmarketplacebadge.apphb.com/version-short/F-loat.vscode-plugin-ncform-schema.svg)](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-plugin-ncform-schema)
 [![Install Count](https://vsmarketplacebadge.apphb.com/installs-short/F-loat.vscode-plugin-ncform-schema.svg)](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-plugin-ncform-schema)
@@ -8,7 +8,7 @@
 
 ## 安装
 
-插件商店搜索 `ncform` 后安装即可
+插件商店搜索 [`ncform`](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-plugin-ncform-schema) 后安装即可
 
 ## 功能
 

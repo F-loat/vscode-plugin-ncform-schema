@@ -91,7 +91,7 @@ export default Vue.extend({
       this.$emit('update', schema);
     },
     handleCopy() {
-      const checkedItem = _get(this.schema, this.paths);
+      const checkedItem = _get(this.schema, this.paths[0]);
       this.copiedItem = _cloneDeep(checkedItem);
     },
     handlePaste() {

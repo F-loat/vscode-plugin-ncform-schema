@@ -38,6 +38,7 @@ import Vue from 'vue';
 import _get from 'lodash-es/get';
 import _set from 'lodash-es/set';
 import _cloneDeep from 'lodash-es/cloneDeep';
+import _isEqual from 'lodash-es/isEqual';
 import contextMenu from './context-menu.vue';
 import nestedDraggable from './nested-draggable.vue';
 import { form2drag, drag2form } from '../utils';
@@ -81,11 +82,11 @@ export default Vue.extend({
     handleCheck(paths: string) {
       const schema = _cloneDeep(this.dragSchema);
       const item = _get(schema, paths);
-      const value = JSON.stringify({
-        ...item,
-        items: undefined,
-        properties: undefined,
-      }, null, 2);
+
+      if (item.items) item.items.properties = undefined;
+      if (item.properties) item.properties = undefined;
+      const value = JSON.stringify(item, null, 2);
+
       this.drawer = { show: true, value, paths };
     },
     handleMenu(e: MouseEvent, paths: string) {
@@ -99,6 +100,29 @@ export default Vue.extend({
         this.menu.show = false;
       }, { once: true });
     },
+    handleItemChange(value: string) {
+      try {
+        const { dragSchema, drawer } = this;
+        const oldItem = _get(dragSchema, drawer.paths);
+        const { items, properties } = oldItem;
+
+        const item = JSON.parse(value);
+        if (item.items) {
+          item.items.properties = items.properties;
+        }
+        if (properties) item.properties = properties;
+
+        const isEqual = _isEqual(item, oldItem);
+
+        if (isEqual) return;
+
+        const schema = _cloneDeep(dragSchema);
+        _set(schema, drawer.paths, item);
+        this.handleUpdate(schema);
+      } catch {
+        // do-nothing
+      }
+    },
     handleUpdate(dragSchema: any) {
       this.$vsemit('update', JSON.stringify({
         ...dragSchema,
@@ -107,21 +131,11 @@ export default Vue.extend({
     },
   },
   watch: {
-    'drawer.value': function handler(value) {
-      try {
-        const item = JSON.parse(value);
-        const { dragSchema, drawer } = this;
-        const { items, properties } = _get(dragSchema, drawer.paths);
-        const schema = _cloneDeep(dragSchema);
-        _set(schema, drawer.paths, {
-          ...item,
-          items,
-          properties,
-        });
-        this.handleUpdate(schema);
-      } catch {
-        // do-nothing
-      }
+    'drawer.value': function handler(value: string) {
+      clearTimeout(this.$options.timer);
+      this.$options.timer = setTimeout(() => {
+        this.handleItemChange(value);
+      }, 300);
     },
   },
 });

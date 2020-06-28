@@ -131,7 +131,7 @@ export class NcFormSchemaEditorProvider implements vscode.CustomTextEditorProvid
   private updateTextDocument(document: vscode.TextDocument, jsonStr: string) {
     const edit = new vscode.WorkspaceEdit();
 
-    // Just replace the entire document every time for this example extension.
+    // Just replace the entire document every time.
     // TODO: compute minimal edits instead.
     edit.replace(
       document.uri,
